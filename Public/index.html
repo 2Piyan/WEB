@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>哈哈PIYAN派對 作品集</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- 導航欄 -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">我的作品集</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" @click.prevent="currentPage = 'home'">首頁</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" @click.prevent="currentPage = 'portfolio'">作品集</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" @click.prevent="currentPage = 'contact'">聯絡我</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <!-- 頁面內容 -->
+        <main>
+            <!-- 首頁 -->
+            <section v-if="currentPage === 'home'" class="hero">
+                <div class="parallax-bg" style="background-image: url('/img/Food.jpg');"></div>
+                <div class="hero-overlay"></div>
+                <div class="hero-content">
+                    <div class="hero-text">
+                        <h1 class="display-3 mb-4 hero-title">歡迎來到我的作品集</h1>
+                        <p class="lead mb-4 hero-subtitle">ヾ(•ω•`)o</p>
+                        <div class="hero-buttons">
+                            <button class="btn btn-primary btn-lg me-3" @click="currentPage = 'portfolio'">
+                                查看作品
+                            </button>
+                            <button class="btn btn-outline-light btn-lg" @click="currentPage = 'contact'">
+                                聯絡我
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- 滾動提示 -->
+                <div class="scroll-indicator">
+                    <div class="mouse"></div>
+                    <p>向下滾動探索</p>
+                </div>
+            </section>
+
+            <!-- 關於我部分 -->
+            <section v-if="currentPage === 'home'" class="about-section py-5">
+                <div class="container">
+                    <h2 class="text-center mb-5">關於我</h2>
+                    <div class="row align-items-center">
+                        <div class="col-lg-6 mb-4 mb-lg-0">
+                            <div class="about-image">
+                                <img src="/img/Pou.jpg" alt="個人照片" class="rounded-circle">
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="about-content">
+                                <p class="about-text">
+                                    低產畫畫人
+                                </p>
+                                <p class="about-text">
+                                    2D插畫、2D動畫、自由接案<br>
+                                    電玩遊戲愛好、愛看漫畫、活網人、愛睏
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 技能部分 -->
+            <section v-if="currentPage === 'home'" class="skills-section py-5">
+                <div class="container">
+                    <h2 class="text-center mb-5">我的技能</h2>
+                    <div class="row">
+                        <div class="col-md-6 col-lg-3 mb-4">
+                            <div class="skill-card">
+                                <div class="skill-icon">
+                                    <i class="icon">⚛️</i>
+                                </div>
+                                <h5 class="skill-title">前端開發</h5>
+                                <p class="skill-description">Vue.js, React, JavaScript, HTML/CSS, Bootstrap</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3 mb-4">
+                            <div class="skill-card">
+                                <div class="skill-icon">
+                                    <i class="icon">🖥️</i>
+                                </div>
+                                <h5 class="skill-title">後端開發</h5>
+                                <p class="skill-description">Node.js, Express, Python, REST API</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3 mb-4">
+                            <div class="skill-card">
+                                <div class="skill-icon">
+                                    <i class="icon">🗄️</i>
+                                </div>
+                                <h5 class="skill-title">資料庫</h5>
+                                <p class="skill-description">MongoDB, PostgreSQL, MySQL, NeDB</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3 mb-4">
+                            <div class="skill-card">
+                                <div class="skill-icon">
+                                    <i class="icon">🎨</i>
+                                </div>
+                                <h5 class="skill-title">UI/UX設計</h5>
+                                <p class="skill-description">Figma, Adobe XD, 原型設計, 用戶體驗</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 服務部分 -->
+            <section v-if="currentPage === 'home'" class="services-section py-5">
+                <div class="container">
+                    <h2 class="text-center mb-5">我提供的服務</h2>
+                    <div class="row">
+                        <div class="col-md-4 mb-4">
+                            <div class="service-card">
+                                <div class="service-icon">💡</div>
+                                <h5>人物設計</h5>
+                                
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <div class="service-card">
+                                <div class="service-icon">👩‍🎨</div>
+                                <h5>插畫繪製</h5>
+                    
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <div class="service-card">
+                                <div class="service-icon">👾</div>
+                                <h5>動畫製作</h5>
+                            
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        
+
+            <!-- 作品集頁面 -->
+            <section v-if="currentPage === 'portfolio'" class="portfolio-section py-5">
+                <div class="container">
+                    <h2 class="text-center mb-5">我的作品</h2>
+
+                    <!-- 動畫作品部分 -->
+                    <div class="portfolio-category mb-5">
+                        <h3 class="category-title">✨ 動畫作品</h3>
+                        <div class="row">
+                            <div 
+                                v-for="portfolio in portfolios.filter(p => p.category === '動畫')" 
+                                :key="portfolio._id"
+                                class="col-md-6 col-lg-4 mb-4"
+                            >
+                                <div class="portfolio-card-simple h-100">
+                                    <!-- 圖片或影片 -->
+                                    <div class="portfolio-media">
+                                        <img 
+                                            v-if="portfolio.imageUrl && !portfolio.videoUrl" 
+                                            :src="portfolio.imageUrl" 
+                                            class="portfolio-img" 
+                                            alt="portfolio"
+                                        >
+                                        <video 
+                                            v-if="portfolio.videoUrl"
+                                            class="portfolio-video"
+                                            controls
+                                            preload="metadata"
+                                        >
+                                            <source :src="portfolio.videoUrl" type="video/mp4">
+                                            你的瀏覽器不支援影片播放
+                                        </video>
+                                        <div v-if="portfolio.videoUrl" class="play-icon">
+                                            <i>▶</i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 插畫作品部分 -->
+                    <div class="portfolio-category">
+                        <h3 class="category-title">🎨 插畫作品</h3>
+                        <div class="row">
+                            <div 
+                                v-for="portfolio in portfolios.filter(p => p.category === '插畫')" 
+                                :key="portfolio._id"
+                                class="col-md-6 col-lg-4 mb-4"
+                            >
+                                <div class="portfolio-card-simple h-100">
+                                    <!-- 圖片或影片 -->
+                                    <div class="portfolio-media">
+                                        <img 
+                                            v-if="portfolio.imageUrl && !portfolio.videoUrl" 
+                                            :src="portfolio.imageUrl" 
+                                            class="portfolio-img" 
+                                            alt="portfolio"
+                                        >
+                                        <video 
+                                            v-if="portfolio.videoUrl"
+                                            class="portfolio-video"
+                                            controls
+                                            preload="metadata"
+                                        >
+                                            <source :src="portfolio.videoUrl" type="video/mp4">
+                                            你的瀏覽器不支援影片播放
+                                        </video>
+                                        <div v-if="portfolio.videoUrl" class="play-icon">
+                                            <i>▶</i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div v-if="portfolios.length === 0" class="alert alert-info text-center">
+                        還沒有作品，新增第一個作品吧！
+                    </div>
+                </div>
+            </section>
+
+            <!-- 聯絡頁面 -->
+            <section v-if="currentPage === 'contact'" class="contact-section py-5">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-8 mx-auto">
+                            <h2 class="text-center mb-5">聯絡我</h2>
+
+                            <!-- 聯絡表單 -->
+                            <div class="card mb-5">
+                                <div class="card-body">
+                                    <form @submit.prevent="sendMessage">
+                                        <div class="mb-3">
+                                            <label for="name" class="form-label">名字</label>
+                                            <input 
+                                                type="text" 
+                                                class="form-control" 
+                                                id="name"
+                                                v-model="contactForm.name"
+                                                required
+                                            >
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="email" class="form-label">電子郵件</label>
+                                            <input 
+                                                type="email" 
+                                                class="form-control" 
+                                                id="email"
+                                                v-model="contactForm.email"
+                                                required
+                                            >
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="phone" class="form-label">電話</label>
+                                            <input 
+                                                type="tel" 
+                                                class="form-control" 
+                                                id="phone"
+                                                v-model="contactForm.phone"
+                                                placeholder="+886-910-123456"
+                                            >
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="subject" class="form-label">主題</label>
+                                            <input 
+                                                type="text" 
+                                                class="form-control" 
+                                                id="subject"
+                                                v-model="contactForm.subject"
+                                                required
+                                            >
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="message" class="form-label">訊息</label>
+                                            <textarea 
+                                                class="form-control" 
+                                                id="message"
+                                                v-model="contactForm.message"
+                                                rows="5"
+                                                required
+                                            ></textarea>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary w-100">
+                                            發送訊息
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- 訊息列表 -->
+                            <h3 class="mb-4">收到的訊息</h3>
+                            <div v-if="messages.length === 0" class="alert alert-info">
+                                還沒有收到訊息。
+                            </div>
+                            <div v-for="msg in messages" :key="msg._id" class="card mb-3">
+                                <div class="card-header">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <strong>{{ msg.name }}</strong> 
+                                            <br>
+                                            <small class="text-muted">
+                                                📧 {{ msg.email }}
+                                                <span v-if="msg.phone">
+                                                  | 📞 {{ msg.phone }}
+                                                </span>
+                                            </small>
+                                            <span v-if="!msg.read" class="badge bg-warning ms-2">未讀</span>
+                                        </div>
+                                        <small class="text-muted">{{ formatDate(msg.createdAt) }}</small>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ msg.subject }}</h5>
+                                    <p class="card-text">{{ msg.message }}</p>
+                                    <div class="btn-group" role="group">
+                                        <button 
+                                            v-if="!msg.read"
+                                            class="btn btn-sm btn-warning"
+                                            @click="markAsRead(msg._id)"
+                                        >
+                                            標記為已讀
+                                        </button>
+                                        <button 
+                                            class="btn btn-sm btn-danger"
+                                            @click="deleteMessage(msg._id)"
+                                        >
+                                            刪除
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- 頁腳 -->
+        <footer class="bg-dark text-white text-center py-4 mt-5">
+            <p>&copy; 哈哈PIYAN派對 作品集. 版權所有。</p>
+        </footer>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <!-- GSAP ScrollTrigger -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <!-- Vue 3 -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- 應用程式 -->
+    <script src="js/app.js"></script>
+</body>
+</html>
