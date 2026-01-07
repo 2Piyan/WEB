@@ -5,7 +5,6 @@ const app = createApp({
         return {
             currentPage: 'home',
             portfolios: [],
-            messages: [],
             contactForm: {
                 name: '',
                 email: '',
@@ -20,24 +19,24 @@ const app = createApp({
             allPortfolios: []
         };
     },
+    computed: {
+        categories() {
+            // 從作品中提取分類
+            const list = this.portfolios.map(portfolio => portfolio.category);
+            // 過濾掉空的分類
+            const filteredList = list.filter(category => category);
+            // 使用 Set 去除重複，再轉回陣列
+            return [...new Set(filteredList)];
+        }
+    },
     mounted() {
-        this.loadPortfolios();
-        this.loadMessages();
         this.animateOnMount();
-        // 如果沒有作品，添加示例作品
-        this.initializeSamplePortfolios();
         // 設置首頁視差效果
         setTimeout(() => {
             if (this.currentPage === 'home') {
                 this.setupHeroParallax();
             }
         }, 500);
-
-        // 加入鍵盤事件監聽（用於 lightbox 左右、Esc）
-        window.addEventListener('keydown', this.handleKeydown);
-    },
-    unmounted() {
-        window.removeEventListener('keydown', this.handleKeydown);
     },
     watch: {
         currentPage(newPage) {
@@ -67,249 +66,23 @@ const app = createApp({
         }
     },
     methods: {
-        // 動畫方法
+        // 動畫方法 (委託給 AppAnimations)
         animateOnMount() {
-            gsap.from('nav', { duration: 0.6, y: -100, opacity: 0, ease: 'power2.out' });
-            gsap.from('footer', { duration: 0.6, y: 100, opacity: 0, ease: 'power2.out' });
+            if (typeof AppAnimations !== 'undefined') AppAnimations.animateOnMount();
         },
         setupHeroParallax() {
-            // 確保元素存在再設置動畫
-            const heroSection = document.querySelector('.hero');
-            if (!heroSection) return;
-            
-            try {
-                if (!gsap.plugins.ScrollTrigger) {
-                    return;
-                }
-
-                // 清除之前的 ScrollTrigger
-                ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-                
-                // 簡化的視差效果
-                gsap.to('.parallax-bg', {
-                    y: -100,
-                    scrollTrigger: {
-                        trigger: '.hero',
-                        start: 'top top',
-                        end: 'bottom top',
-                        scrub: 0.5,
-                        markers: false
-                    },
-                    ease: 'none'
-                });
-
-                // 標題視差效果
-                gsap.to('.hero-title', {
-                    y: 150,
-                    opacity: 0,
-                    scrollTrigger: {
-                        trigger: '.hero',
-                        start: 'top top',
-                        end: 'center center',
-                        scrub: 0.5,
-                        markers: false
-                    }
-                });
-
-                // 副標題視差效果
-                gsap.to('.hero-subtitle', {
-                    y: 100,
-                    opacity: 0,
-                    scrollTrigger: {
-                        trigger: '.hero',
-                        start: 'top center',
-                        end: 'center center',
-                        scrub: 0.5,
-                        markers: false
-                    }
-                });
-
-                // 按鈕視差效果
-                gsap.to('.hero-buttons', {
-                    y: 80,
-                    opacity: 0,
-                    scrollTrigger: {
-                        trigger: '.hero',
-                        start: 'top center',
-                        end: 'center center',
-                        scrub: 0.5,
-                        markers: false
-                    }
-                });
-
-                // 滾動提示動畫
-                gsap.to('.scroll-indicator', {
-                    opacity: 0,
-                    pointerEvents: 'none',
-                    scrollTrigger: {
-                        trigger: '.hero',
-                        start: 'top center',
-                        end: 'bottom center',
-                        scrub: 0.5,
-                        markers: false
-                    }
-                });
-            } catch (error) {
-                console.warn('視差動畫初始化失敗:', error);
-            }
+            if (typeof AppAnimations !== 'undefined') AppAnimations.setupHeroParallax();
         },
         animatePageTransition() {
-            const section = document.querySelector('main > section');
-            if (section) {
-                gsap.fromTo(section, 
-                    { opacity: 0, y: 20 },
-                    { duration: 0.5, opacity: 1, y: 0, ease: 'power2.out' }
-                );
-            }
+            if (typeof AppAnimations !== 'undefined') AppAnimations.animatePageTransition();
         },
         animatePortfolioCards() {
-            const cards = document.querySelectorAll('.portfolio-card');
-            gsap.fromTo(cards,
-                { opacity: 0, y: 30 },
-                { 
-                    opacity: 1, 
-                    y: 0, 
-                    duration: 0.6, 
-                    stagger: 0.1,
-                    ease: 'power2.out'
-                }
-            );
-        },
-        // 作品集方法
-        initializeSamplePortfolios() {
-            const sampleData = [
-                {
-                    title: '大二遊戲宣傳',
-                    description: '又是無情報肝。',
-                    technologies: ['procreat', 'ae'],
-                    link: 'https://example.com/todo',
-                    imageUrl: null,
-                    videoUrl: '/video/1min.mp4',
-                    category: '動畫'
-                },
-                {
-                    title: '自我介紹',
-                    description: '海獅。',
-                    technologies: ['procreat', 'ae'],
-                    link: 'https://example.com/weather',
-                    imageUrl: null,
-                    videoUrl: '/video/1411222018.mp4',
-                    category: '動畫'
-                },
-                {
-                    title: '大二動畫',
-                    description: '老鼠的不歸路。',
-                    technologies: ['procreat', 'ae'],
-                    link: 'https://example.com/weather',
-                    imageUrl: null,
-                    videoUrl: '/video/s1411222018_myanimation.mp4',
-                    category: '動畫'
-                },
-                {
-                    title: '大頭插畫',
-                    description: '精緻的大頭插畫創作，展現人物的表情和特點。',
-                    technologies: ['Vue 3', 'Bootstrap 5', 'JavaScript'],
-                    link: 'https://example.com',
-                    imageUrl: '/img/head.jpg',
-                    videoUrl: null,
-                    category: '插畫'
-                },
-                {
-                    title: '全身插畫',
-                    description: '完整的全身人物插畫作品。',
-                    technologies: ['Procreate', 'Digital Painting'],
-                    link: 'https://example.com',
-                    imageUrl: '/img/hello.jpg',
-                    videoUrl: null,
-                    category: '插畫'
-                },
-                {
-                    title: '人物立繪',
-                    description: '人物稚態立繪插畫作品。',
-                    technologies: ['Procreate', 'Character Design'],
-                    link: 'https://example.com',
-                    imageUrl: '/img/oc.jpg',
-                    videoUrl: null,
-                    category: '插畫'
-                },
-                {
-                    title: '半身插畫',
-                    description: '半身人物插畫作品。',
-                    technologies: ['Procreate', 'Illustration'],
-                    link: 'https://example.com',
-                    imageUrl: '/img/hua.jpg',
-                    videoUrl: null,
-                    category: '插畫'
-                },
-                {
-                    title: '作業',
-                    description: '半身人物插畫作品。',
-                    technologies: ['Procreate', 'Illustration'],
-                    link: 'https://example.com/shop',
-                    imageUrl: '/img/work.jpg',
-                    videoUrl: null,
-                    category: '插畫'
-                },
-            ];
-
-            // 確保示例資料有唯一 _id
-            this.ensurePortfolioIds(sampleData);
-
-            // 檢查是否已有作品，如果沒有則添加示例
-            if (this.portfolios.length === 0) {
-                setTimeout(() => {
-                    this.portfolios = sampleData;
-                    this.updateAllPortfolios();
-                    this.$nextTick(() => {
-                        this.animateCards();
-                    });
-                }, 500);
-            }
-        },
-        // 產生簡單唯一 id
-        generateId() {
-            return 'id_' + Math.random().toString(36).slice(2, 10) + '_' + Date.now().toString(36);
-        },
-
-        // 確保作品陣列中的每個項目都有 _id
-        ensurePortfolioIds(arr) {
-            if (!Array.isArray(arr)) return;
-            arr.forEach(p => {
-                if (!p._id) p._id = this.generateId();
-            });
-        },
-        async loadPortfolios() {
-            try {
-                const response = await axios.get('/api/portfolios');
-                // 若後端回傳沒有 _id（例如測試資料），補上唯一 id
-                this.ensurePortfolioIds(response.data);
-                this.portfolios = response.data;
-                this.updateAllPortfolios();
-                this.$nextTick(() => {
-                    this.animateCards();
-                });
-            } catch (error) {
-                console.error('載入作品集出錯:', error);
-            }
+            if (typeof AppAnimations !== 'undefined') AppAnimations.animatePortfolioCards();
         },
         animateCards() {
-            gsap.from('.portfolio-card', {
-                duration: 0.6,
-                y: 50,
-                opacity: 0,
-                stagger: 0.1,
-                ease: 'power2.out'
-            });
+            if (typeof AppAnimations !== 'undefined') AppAnimations.animateCards();
         },
         // 訊息方法
-        async loadMessages() {
-            try {
-                const response = await axios.get('/api/messages');
-                this.messages = response.data;
-            } catch (error) {
-                console.error('載入訊息出錯:', error);
-            }
-        },
         async sendMessage() {
             try {
                 await axios.post('/api/messages', {
@@ -329,109 +102,105 @@ const app = createApp({
                     message: ''
                 };
 
-                // 重新載入訊息
-                await this.loadMessages();
                 alert('訊息已發送!');
             } catch (error) {
                 console.error('發送訊息出錯:', error);
                 alert('發送失敗，請稍後重試');
             }
         },
-        async markAsRead(id) {
-            try {
-                await axios.put(`/api/messages/${id}`);
-                await this.loadMessages();
-            } catch (error) {
-                console.error('標記訊息出錯:', error);
-            }
-        },
-        async deleteMessage(id) {
-            if (!confirm('確定要刪除此訊息嗎?')) return;
-            try {
-                await axios.delete(`/api/messages/${id}`);
-                await this.loadMessages();
-            } catch (error) {
-                console.error('刪除訊息出錯:', error);
-            }
-        },
-        formatDate(date) {
-            return new Date(date).toLocaleString('zh-TW');
-        },
-        updateAllPortfolios() {
-            // 合併所有作品用於光箱導航
-            // 保留原本的順序
-            this.ensurePortfolioIds(this.portfolios);
-            this.allPortfolios = this.portfolios.slice();
-        },
-        openLightbox(portfolio) {
-            // 當在作品集頁面時，僅以同分類的作品作為光箱導航來源，順序與頁面相同
-            let source = this.portfolios;
-            if (this.currentPage === 'portfolio' && portfolio && portfolio.category) {
-                source = this.portfolios.filter(p => p.category === portfolio.category);
+        openLightbox(clickedPortfolio) {
+            // 1. 決定要在光箱中顯示哪些作品列表
+            // 如果在作品集頁面，只顯示「同分類」的作品；否則顯示全部
+            let lightboxList = this.portfolios;
+            
+            // 判斷是否需要過濾分類
+            const isPortfolioPage = this.currentPage === 'portfolio';
+            const hasCategory = clickedPortfolio && clickedPortfolio.category;
+            
+            if (isPortfolioPage && hasCategory) {
+                // 過濾出同分類的作品
+                lightboxList = this.portfolios.filter(item => item.category === clickedPortfolio.category);
             }
 
-            // 確保 id
-            this.ensurePortfolioIds(source);
-            this.allPortfolios = source.slice();
+            // 複製一份列表供光箱切換使用
+            this.allPortfolios = lightboxList.slice();
 
-            // 找到當前索引
-            this.lightboxIndex = this.allPortfolios.findIndex(p => p._id === portfolio._id);
+            // 2. 找出被點擊的作品在列表中的位置 (索引)
+            this.lightboxIndex = this.allPortfolios.findIndex(item => item._id === clickedPortfolio._id);
+            
+            // 防呆機制：如果找不到，就預設第一張
             if (this.lightboxIndex === -1) {
-                // fallback: 比對 title/link
-                this.lightboxIndex = this.allPortfolios.findIndex(p => p === portfolio || (p.title === portfolio.title && p.link === portfolio.link));
+                this.lightboxIndex = 0;
             }
-            if (this.lightboxIndex < 0) this.lightboxIndex = 0;
 
-            const current = this.allPortfolios[this.lightboxIndex];
-            this.lightboxImage = current.imageUrl;
-            this.lightboxVideo = current.videoUrl;
+            // 3. 更新畫面並顯示光箱
+            this.updateLightboxContent();
             this.showLightbox = true;
-            document.body.style.overflow = 'hidden';
+            document.body.style.overflow = 'hidden'; // 禁止背景滾動
         },
+
         closeLightbox() {
             this.showLightbox = false;
-            document.body.style.overflow = 'auto';
-            // 若有影片，停止播放
-            const v = document.querySelector('.lightbox-video');
-            if (v) {
-                try { v.pause(); v.currentTime = 0; } catch (e) { /* ignore */ }
+            document.body.style.overflow = 'auto'; // 恢復背景滾動
+            
+            // 關閉時，嘗試暫停影片
+            const videoElement = document.querySelector('.lightbox-video');
+            if (videoElement) {
+                videoElement.pause();
+                videoElement.currentTime = 0;
             }
         },
+
         nextLightbox() {
-            if (!this.allPortfolios.length) return;
+            if (this.allPortfolios.length === 0) return;
+
+            // 計算下一張的索引 (使用 % 餘數運算來實現循環播放)
+            // 例如：目前是 4，總數 5 -> (4 + 1) % 5 = 0 (回到第一張)
             this.lightboxIndex = (this.lightboxIndex + 1) % this.allPortfolios.length;
-            const portfolio = this.allPortfolios[this.lightboxIndex];
-            this.lightboxImage = portfolio.imageUrl;
-            this.lightboxVideo = portfolio.videoUrl;
-            // 如果是影片，讓它從頭播放
-            this.$nextTick(() => {
-                const v = document.querySelector('.lightbox-video');
-                if (v) { try { v.currentTime = 0; v.play(); } catch(e){} }
-            });
+            
+            this.updateLightboxContent();
         },
+
         prevLightbox() {
-            if (!this.allPortfolios.length) return;
+            if (this.allPortfolios.length === 0) return;
+
+            // 計算上一張 (加上長度是為了避免負數，例如 -1 變成 4)
             this.lightboxIndex = (this.lightboxIndex - 1 + this.allPortfolios.length) % this.allPortfolios.length;
-            const portfolio = this.allPortfolios[this.lightboxIndex];
-            this.lightboxImage = portfolio.imageUrl;
-            this.lightboxVideo = portfolio.videoUrl;
+            
+            this.updateLightboxContent();
+        },
+
+        // [新增 helper] 統一處理更新光箱內容的邏輯 (圖片、影片、自動播放)
+        updateLightboxContent() {
+            const currentItem = this.allPortfolios[this.lightboxIndex];
+            
+            // 更新圖片與影片連結
+            this.lightboxImage = currentItem.imageUrl;
+            this.lightboxVideo = currentItem.videoUrl;
+
+            // 等待畫面 DOM 更新後，如果是影片則自動播放
             this.$nextTick(() => {
-                const v = document.querySelector('.lightbox-video');
-                if (v) { try { v.currentTime = 0; v.play(); } catch(e){} }
+                const videoElement = document.querySelector('.lightbox-video');
+                if (videoElement) {
+                    videoElement.currentTime = 0;
+                    // 忽略自動播放可能被瀏覽器阻擋的錯誤
+                    videoElement.play().catch(() => {});
+                }
             });
         },
-        // 鍵盤操作：左右切換、Esc 關閉
-        handleKeydown(e) {
-            if (!this.showLightbox) return;
-            if (e.key === 'Escape') {
-                this.closeLightbox();
-            } else if (e.key === 'ArrowRight') {
-                this.nextLightbox();
-            } else if (e.key === 'ArrowLeft') {
-                this.prevLightbox();
-            }
-        }
     }
 });
+         
+const vm = app.mount('#app');
 
-app.mount('#app');
+$.ajax({
+    url: '/api/portfolios',
+    method: 'GET',
+    dataType: 'json',
+    success: function(results) {
+        vm.portfolios = results;
+        vm.$nextTick(() => {
+            vm.animateCards();
+        });
+    }
+});

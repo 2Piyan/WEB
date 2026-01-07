@@ -25,7 +25,7 @@
                             <a class="nav-link" href="#" @click.prevent="currentPage = 'portfolio'">作品集</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#" @click.prevent="currentPage = 'contact'">聯                            npm install express                            npm install express絡我</a>
+                            <a class="nav-link" href="#" @click.prevent="currentPage = 'contact'">聯絡我</a>
                         </li>
                     </ul>
                 </div>
@@ -35,13 +35,13 @@
         <!-- 頁面內容 -->
         <main>
             <!-- 首頁 -->
-            <section v-if="currentPage === 'home' && portfolios.length > 0" class="hero">
-                <div class="parallax-bg" :style="portfolios[0].imageUrl ? 'background-image: url(' + portfolios[0].imageUrl + ');' : 'background-image: url(/img/Food.jpg);'"></div>
+            <section v-if="currentPage === 'home'" class="hero">
+                <div class="parallax-bg" style="background-image: url('/img/Food.jpg');"></div>
                 <div class="hero-overlay"></div>
                 <div class="hero-content">
                     <div class="hero-text">
-                        <h1 class="display-3 mb-4 hero-title">{{ portfolios[0].title || '歡迎來到我的作品集' }}</h1>
-                        <p class="lead mb-4 hero-subtitle">{{ portfolios[0].description || 'ヾ(•ω•`)o' }}</p>
+                        <h1 class="display-3 mb-4 hero-title">歡迎來到我的作品集</h1>
+                        <p class="lead mb-4 hero-subtitle">ヾ(•ω•`)o</p>
                         <div class="hero-buttons">
                             <button class="btn btn-primary btn-lg me-3" @click="currentPage = 'portfolio'">
                                 查看作品
@@ -53,28 +53,6 @@
                     </div>
                 </div>
                 <!-- 滾動提示 -->
-                <div class="scroll-indicator">
-                    <div class="mouse"></div>
-                    <p>向下滾動探索</p>
-                </div>
-            </section>
-            <section v-if="currentPage === 'home' && portfolios.length === 0" class="hero">
-                <div class="parallax-bg" style="background-image: url('/img/Food.jpg');"></div>
-                <div class="hero-overlay"></div>
-                <div class="hero-content">
-                    <div class="hero-text">
-                        <h1 class="display-3 mb-4 hero-title">歡迎來到我的作品集</h1>
-                        <p class="lead mb-4 hero-subtitle">目前尚無作品，請先新增！</p>
-                        <div class="hero-buttons">
-                            <button class="btn btn-primary btn-lg me-3" @click="currentPage = 'portfolio'">
-                                查看作品
-                            </button>
-                            <button class="btn btn-outline-light btn-lg" @click="currentPage = 'contact'">
-                                聯絡我
-                            </button>
-                        </div>
-                    </div>
-                </div>
                 <div class="scroll-indicator">
                     <div class="mouse"></div>
                     <p>向下滾動探索</p>
@@ -138,12 +116,12 @@
                 <div class="container">
                     <h2 class="text-center mb-5">我的作品</h2>
 
-                    <!-- 動畫作品部分 -->
-                    <div class="portfolio-category mb-5">
-                        <h3 class="category-title">✨ 動畫作品</h3>
+                    <!-- 動態分類作品列表 -->
+                    <div v-for="category in categories" :key="category" class="portfolio-category mb-5">
+                        <h3 class="category-title">{{ category }}</h3>
                         <div class="row">
                             <div 
-                                v-for="portfolio in portfolios.filter(p => p.category === '動畫')" 
+                                v-for="portfolio in portfolios.filter(p => p.category === category)" 
                                 :key="portfolio._id"
                                 class="col-md-6 col-lg-4 mb-4"
                             >
@@ -173,47 +151,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- 插畫作品部分 -->
-                    <div class="portfolio-category">
-                        <h3 class="category-title">🎨 插畫作品</h3>
-                        <div class="row">
-                            <div 
-                                v-for="portfolio in portfolios.filter(p => p.category === '插畫')" 
-                                :key="portfolio._id"
-                                class="col-md-6 col-lg-4 mb-4"
-                            >
-                                <div class="portfolio-card-simple h-100">
-                                    <!-- 圖片或影片 -->
-                                    <div class="portfolio-media" @click="openLightbox(portfolio)" style="cursor: pointer;">
-                                        <img 
-                                            v-if="portfolio.imageUrl && !portfolio.videoUrl" 
-                                            :src="portfolio.imageUrl" 
-                                            class="portfolio-img" 
-                                            alt="portfolio"
-                                        >
-                                        <video 
-                                            v-if="portfolio.videoUrl"
-                                            class="portfolio-video"
-                                            @click.stop
-                                            controls
-                                            preload="metadata"
-                                        >
-                                            <source :src="portfolio.videoUrl" type="video/mp4">
-                                            你的瀏覽器不支援影片播放
-                                        </video>
-                                        <div v-if="portfolio.videoUrl" class="play-icon">
-                                            <i>▶</i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div v-if="portfolios.length === 0" class="alert alert-info text-center">
-                        還沒有作品，新增第一個作品吧！
                     </div>
                 </div>
             </section>
@@ -291,48 +228,7 @@
                                 </div>
                             </div>
 
-                            <!-- 訊息列表 -->
-                            <h3 class="mb-4">收到的訊息</h3>
-                            <div v-if="messages.length === 0" class="alert alert-info">
-                                還沒有收到訊息。
-                            </div>
-                            <div v-for="msg in messages" :key="msg._id" class="card mb-3">
-                                <div class="card-header">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <strong>{{ msg.name }}</strong> 
-                                            <br>
-                                            <small class="text-muted">
-                                                📧 {{ msg.email }}
-                                                <span v-if="msg.phone">
-                                                  | 📞 {{ msg.phone }}
-                                                </span>
-                                            </small>
-                                            <span v-if="!msg.read" class="badge bg-warning ms-2">未讀</span>
-                                        </div>
-                                        <small class="text-muted">{{ formatDate(msg.createdAt) }}</small>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <h5 class="card-title">{{ msg.subject }}</h5>
-                                    <p class="card-text">{{ msg.message }}</p>
-                                    <div class="btn-group" role="group">
-                                        <button 
-                                            v-if="!msg.read"
-                                            class="btn btn-sm btn-warning"
-                                            @click="markAsRead(msg._id)"
-                                        >
-                                            標記為已讀
-                                        </button>
-                                        <button 
-                                            class="btn btn-sm btn-danger"
-                                            @click="deleteMessage(msg._id)"
-                                        >
-                                            刪除
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -344,10 +240,6 @@
             <div class="lightbox-content" @click.stop>
                 <button class="lightbox-close" @click="closeLightbox">&times;</button>
                 <img v-if="lightboxImage" :src="lightboxImage" class="lightbox-image" alt="全圖">
-                <video v-if="lightboxVideo" class="lightbox-video" controls autoplay>
-                    <source :src="lightboxVideo" type="video/mp4">
-                    你的瀏覽器不支援影片播放
-                </video>
                 <div class="lightbox-nav">
                     <button class="lightbox-prev" @click="prevLightbox">❮</button>
                     <span class="lightbox-counter">{{ lightboxIndex + 1 }} / {{ allPortfolios.length }}</span>
@@ -372,6 +264,10 @@
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <!-- Axios -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!-- 動畫腳本 -->
+    <script src="js/animations.js"></script>
     <!-- 應用程式 -->
     <script src="js/app.js"></script>
 </body>

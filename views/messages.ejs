@@ -19,8 +19,8 @@
               <strong><%= msg.name %></strong>
               <br>
               <small class="text-muted">
-                📧 <%= msg.email %>
-                <% if (msg.phone) { %> | 📞 <%= msg.phone %> <% } %>
+                 <%= msg.email %>
+                <% if (msg.phone) { %> |  <%= msg.phone %> <% } %>
               </small>
               <% if (!msg.read) { %>
                 <span class="badge bg-warning ms-2">未讀</span>
@@ -32,16 +32,6 @@
         <div class="card-body">
           <h5 class="card-title"><%= msg.subject %></h5>
           <p class="card-text"><%= msg.message %></p>
-          <div class="btn-group" role="group">
-            <% if (!msg.read) { %>
-              <form method="post" action="/messages/<%= msg._id %>/read" style="display:inline;">
-                <button type="submit" class="btn btn-sm btn-warning">標記為已讀</button>
-              </form>
-            <% } %>
-            <form method="post" action="/messages/<%= msg._id %>/delete" style="display:inline;">
-              <button type="submit" class="btn btn-sm btn-danger">刪除</button>
-            </form>
-          </div>
         </div>
       </div>
     <% }); %>
