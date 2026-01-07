@@ -12,6 +12,7 @@ const PORT = process.env.PORT || 3000;
 // 中間件
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));  
 app.use(express.static(path.join(__dirname, 'Public')));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -132,7 +133,7 @@ app.delete('/api/portfolios/:id', async (req, res) => {
 // API 路由 - 訊息
 
 // 獲取所有訊息
-app.get('/api/messages', async (req, res) => {
+app.get('/api/messages',   async (req, res) => {
   try {
     const messages = await messagesDb.find({}).sort({ createdAt: -1 });
     res.json(messages);
@@ -217,3 +218,4 @@ app.post('/messages/:id/delete', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
+// Server.listen(80);
