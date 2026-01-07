@@ -84,3 +84,14 @@ server.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
 
+// portfolioDB.insert([
+//     {"_id":"p_1","title":"大二遊戲宣傳","description":"又是無情報肝。","technologies":["procreat","ae"],"link":"https://example.com/todo","imageUrl":null,"videoUrl":"/video/1min.mp4","category":"動畫","createdAt":"2025-12-24T00:00:00.000Z","updatedAt":"2025-12-24T00:00:00.000Z"}
+// {"_id":"p_2","title":"自我介紹","description":"海獅。","technologies":["procreat","ae"],"link":"https://example.com/weather","imageUrl":null,"videoUrl":"/video/1411222018.mp4","category":"動畫","createdAt":"2025-12-24T00:00:00.000Z","updatedAt":"2025-12-24T00:00:00.000Z"}
+// {"_id":"p_3","title":"大二動畫","description":"老鼠的不歸路。","technologies":["procreat","ae"],"link":"https://example.com/weather","imageUrl":null,"videoUrl":"/video/s1411222018_myanimation.mp4","category":"動畫","createdAt":"2025-12-24T00:00:00.000Z","updatedAt":"2025-12-24T00:00:00.000Z"}
+// {"_id":"p_4","title":"大頭插畫","description":"精緻的大頭插畫創作，展現人物的表情和特點。","technologies":["Vue 3","Bootstrap 5","JavaScript"],"link":"https://example.com","imageUrl":"/img/head.jpg","videoUrl":null,"category":"插畫","createdAt":"2025-12-24T00:00:00.000Z","updatedAt":"2025-12-24T00:00:00.000Z"}
+// {"_id":"p_5","title":"全身插畫","description":"完整的全身人物插畫作品。","technologies":["Procreate","Digital Painting"],"link":"https://example.com","imageUrl":"/img/hello.jpg","videoUrl":null,"category":"插畫","createdAt":"2025-12-24T00:00:00.000Z","updatedAt":"2025-12-24T00:00:00.000Z"}
+// {"_id":"p_6","title":"人物立繪","description":"人物稚態立繪插畫作品。","technologies":["Procreate","Character Design"],"link":"https://example.com","imageUrl":"/img/oc.jpg","videoUrl":null,"category":"插畫","createdAt":"2025-12-24T00:00:00.000Z","updatedAt":"2025-12-24T00:00:00.000Z"}
+// {"_id":"p_7","title":"半身插畫","description":"半身人物插畫作品。","technologies":["Procreate","Illustration"],"link":"https://example.com","imageUrl":"/img/hua.jpg","videoUrl":null,"category":"插畫","createdAt":"2025-12-24T00:00:00.000Z","updatedAt":"2025-12-24T00:00:00.000Z"}
+// {"_id":"p_8","title":"作業","description":"半身人物插畫作品。","technologies":["Procreate","Illustration"],"link":"https://example.com/shop","imageUrl":"/img/work.jpg","videoUrl":null,"category":"插畫","createdAt":"2025-12-24T00:00:00.000Z","updatedAt":"2025-12-24T00:00:00.000Z"}
+
+// ]);
