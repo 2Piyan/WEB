@@ -27,89 +27,48 @@ async function initializeData() {
     // 添加示例作品
     const samplePortfolios = [
       {
-        title: '個人網站',
-        description: '使用 Vue 和 Bootstrap 構建的個人作品集網站。這是一個完整的響應式設計，支持暗黑模式和多語言切換，展示了現代前端開發技術。',
+        title: '大二遊戲宣傳',
+        description: '又是無情報肝。',
+        technologies: ['procreat', 'ae'],
+        link: 'https://example.com/todo',
+        imageUrl: '/img/Food.jpg',
+        videoUrl: '/video/1min.mp4',
+        category: '動畫',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        title: '大頭插畫',
+        description: '精緻的大頭插畫創作，展現人物的表情和特點。',
         technologies: ['Vue 3', 'Bootstrap 5', 'JavaScript'],
         link: 'https://example.com',
-        imageUrl: 'https://images.unsplash.com/photo-1460925895917-adf4e6f5b3bb?w=500&h=300&fit=crop',
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        title: '待辦事項應用',
-        description: '一個具有本地存儲功能的待辦事項管理應用。支持添加、編輯、刪除任務，並可根據優先級和截止日期進行排序，界面簡潔易用。',
-        technologies: ['Vue', 'localStorage', 'CSS3'],
-        link: 'https://example.com/todo',
-        imageUrl: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=500&h=300&fit=crop',
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        title: '天氣應用',
-        description: '實時天氣查詢應用，集成了 OpenWeatherMap API。可以查詢全球各地的天氣，支持自動定位和天氣預報功能。',
-        technologies: ['React', 'Axios', 'OpenWeatherMap API'],
-        link: 'https://example.com/weather',
-        imageUrl: 'https://images.unsplash.com/photo-1531746790731-6c087fecd965?w=500&h=300&fit=crop',
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        title: '電子商務平台',
-        description: '功能完整的電子商務平台，包含商品展示、購物車、訂單管理和支付集成。使用了 Stripe 進行安全的支付處理。',
-        technologies: ['Vue', 'Node.js', 'MongoDB', 'Stripe'],
-        link: 'https://example.com/shop',
-        imageUrl: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=500&h=300&fit=crop',
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        title: '社交媒體儀表板',
-        description: '社交媒體統計分析儀表板。集成多個社交平台的 API，實時顯示粉絲數、互動率和發文統計，提供數據可視化圖表。',
-        technologies: ['React', 'Chart.js', 'Instagram API', 'Twitter API'],
-        link: 'https://example.com/dashboard',
-        imageUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&h=300&fit=crop',
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        title: '專案管理工具',
-        description: '團隊協作的專案管理工具。支持看板視圖、甘特圖、任務分配、時間追蹤和實時協作編輯功能，提升團隊效率。',
-        technologies: ['Vue 3', 'WebSocket', 'PostgreSQL', 'Express'],
-        link: 'https://example.com/pm',
-        imageUrl: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=500&h=300&fit=crop',
+        imageUrl: '/img/head.jpg',
+        videoUrl: null,
+        category: '插畫',
         createdAt: new Date(),
         updatedAt: new Date()
       }
     ];
 
-    // 檢查是否已有數據
-    const count = await portfoliosDb.count({});
-    if (count === 0) {
-      await portfoliosDb.insert(samplePortfolios);
-      console.log('✓ 已添加示例作品');
-    } else {
-      console.log('✓ 作品集已有數據，跳過初始化');
-    }
+    // 清空原有資料再插入
+    await portfoliosDb.remove({}, { multi: true });
+    await portfoliosDb.insert(samplePortfolios);
 
     // 添加示例訊息
     const sampleMessages = [
       {
-        name: '李四',
-        email: 'lisi@example.com',
-        subject: '很棒的作品！',
-        message: '我非常喜歡你的設計風格，有興趣合作嗎？',
+        name: '訪客A',
+        email: 'visitorA@example.com',
+        phone: '',
+        subject: '你好',
+        message: '這是測試訊息',
         createdAt: new Date(),
-        read: true
+        read: false
       }
     ];
-
-    const msgCount = await messagesDb.count({});
-    if (msgCount === 0) {
-      await messagesDb.insert(sampleMessages);
-      console.log('✓ 已添加示例訊息');
-    } else {
-      console.log('✓ 訊息已有數據，跳過初始化');
-    }
+    await messagesDb.remove({}, { multi: true });
+    await messagesDb.insert(sampleMessages);
+    console.log('✓ 已添加 PIYAN 風格範例作品與訊息');
 
     console.log('\n✓ 數據初始化完成！');
     process.exit(0);

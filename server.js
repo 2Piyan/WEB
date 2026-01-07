@@ -4,6 +4,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const Database = require('nedb-promises');
+const ejs = require('ejs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -12,6 +13,8 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'Public')));
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
 // 設置文件上傳
 const uploadDir = path.join(__dirname, 'Public', 'upload');
@@ -24,28 +27,28 @@ const storage = multer.diskStorage({
     cb(null, uploadDir);
   },
   filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+    cb(null, file.originalname);
   }
 });
 
 const upload = multer({ storage });
 
+// 確保資料目錄存在（必須在初始化 NeDB 之前）
+const dataDir = path.join(__dirname, 'data');
+if (!fs.existsSync(dataDir)) {
+  fs.mkdirSync(dataDir, { recursive: true });
+}
+
 // NeDB 資料庫初始化
 const portfoliosDb = new Database({
-  filename: path.join(__dirname, 'data', 'portfolios.db'),
+  filename: path.join(dataDir, 'portfolios.db'),
   autoload: true
 });
 
 const messagesDb = new Database({
-  filename: path.join(__dirname, 'data', 'messages.db'),
+  filename: path.join(dataDir, 'messages.db'),
   autoload: true
 });
-
-// 確保資料目錄存在
-if (!fs.existsSync(path.join(__dirname, 'data'))) {
-  fs.mkdirSync(path.join(__dirname, 'data'), { recursive: true });
-}
 
 // API 路由 - 作品集
 
@@ -178,6 +181,36 @@ app.delete('/api/messages/:id', async (req, res) => {
     res.json({ success: true });
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+});
+
+// EJS 訊息列表頁
+app.get('/messages', async (req, res) => {
+  try {
+    const messages = await messagesDb.find({}).sort({ createdAt: -1 });
+    res.render('messages', { messages });
+  } catch (error) {
+    res.status(500).send('伺服器錯誤: ' + error.message);
+  }
+});
+
+// 標記訊息為已讀（EJS表單）
+app.post('/messages/:id/read', async (req, res) => {
+  try {
+    await messagesDb.update({ _id: req.params.id }, { $set: { read: true } });
+    res.redirect('/messages');
+  } catch (error) {
+    res.status(500).send('伺服器錯誤: ' + error.message);
+  }
+});
+
+// 刪除訊息（EJS表單）
+app.post('/messages/:id/delete', async (req, res) => {
+  try {
+    await messagesDb.remove({ _id: req.params.id });
+    res.redirect('/messages');
+  } catch (error) {
+    res.status(500).send('伺服器錯誤: ' + error.message);
   }
 });
 

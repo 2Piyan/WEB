@@ -25,7 +25,7 @@
                             <a class="nav-link" href="#" @click.prevent="currentPage = 'portfolio'">作品集</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#" @click.prevent="currentPage = 'contact'">聯絡我</a>
+                            <a class="nav-link" href="#" @click.prevent="currentPage = 'contact'">聯                            npm install express                            npm install express絡我</a>
                         </li>
                     </ul>
                 </div>
@@ -35,13 +35,13 @@
         <!-- 頁面內容 -->
         <main>
             <!-- 首頁 -->
-            <section v-if="currentPage === 'home'" class="hero">
-                <div class="parallax-bg" style="background-image: url('/img/Food.jpg');"></div>
+            <section v-if="currentPage === 'home' && portfolios.length > 0" class="hero">
+                <div class="parallax-bg" :style="portfolios[0].imageUrl ? 'background-image: url(' + portfolios[0].imageUrl + ');' : 'background-image: url(/img/Food.jpg);'"></div>
                 <div class="hero-overlay"></div>
                 <div class="hero-content">
                     <div class="hero-text">
-                        <h1 class="display-3 mb-4 hero-title">歡迎來到我的作品集</h1>
-                        <p class="lead mb-4 hero-subtitle">ヾ(•ω•`)o</p>
+                        <h1 class="display-3 mb-4 hero-title">{{ portfolios[0].title || '歡迎來到我的作品集' }}</h1>
+                        <p class="lead mb-4 hero-subtitle">{{ portfolios[0].description || 'ヾ(•ω•`)o' }}</p>
                         <div class="hero-buttons">
                             <button class="btn btn-primary btn-lg me-3" @click="currentPage = 'portfolio'">
                                 查看作品
@@ -53,6 +53,28 @@
                     </div>
                 </div>
                 <!-- 滾動提示 -->
+                <div class="scroll-indicator">
+                    <div class="mouse"></div>
+                    <p>向下滾動探索</p>
+                </div>
+            </section>
+            <section v-if="currentPage === 'home' && portfolios.length === 0" class="hero">
+                <div class="parallax-bg" style="background-image: url('/img/Food.jpg');"></div>
+                <div class="hero-overlay"></div>
+                <div class="hero-content">
+                    <div class="hero-text">
+                        <h1 class="display-3 mb-4 hero-title">歡迎來到我的作品集</h1>
+                        <p class="lead mb-4 hero-subtitle">目前尚無作品，請先新增！</p>
+                        <div class="hero-buttons">
+                            <button class="btn btn-primary btn-lg me-3" @click="currentPage = 'portfolio'">
+                                查看作品
+                            </button>
+                            <button class="btn btn-outline-light btn-lg" @click="currentPage = 'contact'">
+                                聯絡我
+                            </button>
+                        </div>
+                    </div>
+                </div>
                 <div class="scroll-indicator">
                     <div class="mouse"></div>
                     <p>向下滾動探索</p>
@@ -84,51 +106,6 @@
                 </div>
             </section>
 
-            <!-- 技能部分 -->
-            <section v-if="currentPage === 'home'" class="skills-section py-5">
-                <div class="container">
-                    <h2 class="text-center mb-5">我的技能</h2>
-                    <div class="row">
-                        <div class="col-md-6 col-lg-3 mb-4">
-                            <div class="skill-card">
-                                <div class="skill-icon">
-                                    <i class="icon">⚛️</i>
-                                </div>
-                                <h5 class="skill-title">前端開發</h5>
-                                <p class="skill-description">Vue.js, React, JavaScript, HTML/CSS, Bootstrap</p>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-3 mb-4">
-                            <div class="skill-card">
-                                <div class="skill-icon">
-                                    <i class="icon">🖥️</i>
-                                </div>
-                                <h5 class="skill-title">後端開發</h5>
-                                <p class="skill-description">Node.js, Express, Python, REST API</p>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-3 mb-4">
-                            <div class="skill-card">
-                                <div class="skill-icon">
-                                    <i class="icon">🗄️</i>
-                                </div>
-                                <h5 class="skill-title">資料庫</h5>
-                                <p class="skill-description">MongoDB, PostgreSQL, MySQL, NeDB</p>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-3 mb-4">
-                            <div class="skill-card">
-                                <div class="skill-icon">
-                                    <i class="icon">🎨</i>
-                                </div>
-                                <h5 class="skill-title">UI/UX設計</h5>
-                                <p class="skill-description">Figma, Adobe XD, 原型設計, 用戶體驗</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
             <!-- 服務部分 -->
             <section v-if="currentPage === 'home'" class="services-section py-5">
                 <div class="container">
@@ -138,28 +115,23 @@
                             <div class="service-card">
                                 <div class="service-icon">💡</div>
                                 <h5>人物設計</h5>
-                                
                             </div>
                         </div>
                         <div class="col-md-4 mb-4">
                             <div class="service-card">
                                 <div class="service-icon">👩‍🎨</div>
                                 <h5>插畫繪製</h5>
-                    
                             </div>
                         </div>
                         <div class="col-md-4 mb-4">
                             <div class="service-card">
                                 <div class="service-icon">👾</div>
                                 <h5>動畫製作</h5>
-                            
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
-
-        
 
             <!-- 作品集頁面 -->
             <section v-if="currentPage === 'portfolio'" class="portfolio-section py-5">
@@ -177,7 +149,7 @@
                             >
                                 <div class="portfolio-card-simple h-100">
                                     <!-- 圖片或影片 -->
-                                    <div class="portfolio-media">
+                                    <div class="portfolio-media" @click="openLightbox(portfolio)" style="cursor: pointer;">
                                         <img 
                                             v-if="portfolio.imageUrl && !portfolio.videoUrl" 
                                             :src="portfolio.imageUrl" 
@@ -187,6 +159,7 @@
                                         <video 
                                             v-if="portfolio.videoUrl"
                                             class="portfolio-video"
+                                            @click.stop
                                             controls
                                             preload="metadata"
                                         >
@@ -213,7 +186,7 @@
                             >
                                 <div class="portfolio-card-simple h-100">
                                     <!-- 圖片或影片 -->
-                                    <div class="portfolio-media">
+                                    <div class="portfolio-media" @click="openLightbox(portfolio)" style="cursor: pointer;">
                                         <img 
                                             v-if="portfolio.imageUrl && !portfolio.videoUrl" 
                                             :src="portfolio.imageUrl" 
@@ -223,6 +196,7 @@
                                         <video 
                                             v-if="portfolio.videoUrl"
                                             class="portfolio-video"
+                                            @click.stop
                                             controls
                                             preload="metadata"
                                         >
@@ -365,9 +339,26 @@
             </section>
         </main>
 
+        <!-- 全圖查看模態框 -->
+        <div v-if="showLightbox" class="lightbox-overlay" @click="closeLightbox">
+            <div class="lightbox-content" @click.stop>
+                <button class="lightbox-close" @click="closeLightbox">&times;</button>
+                <img v-if="lightboxImage" :src="lightboxImage" class="lightbox-image" alt="全圖">
+                <video v-if="lightboxVideo" class="lightbox-video" controls autoplay>
+                    <source :src="lightboxVideo" type="video/mp4">
+                    你的瀏覽器不支援影片播放
+                </video>
+                <div class="lightbox-nav">
+                    <button class="lightbox-prev" @click="prevLightbox">❮</button>
+                    <span class="lightbox-counter">{{ lightboxIndex + 1 }} / {{ allPortfolios.length }}</span>
+                    <button class="lightbox-next" @click="nextLightbox">❯</button>
+                </div>
+            </div>
+        </div>
+
         <!-- 頁腳 -->
         <footer class="bg-dark text-white text-center py-4 mt-5">
-            <p>&copy; 哈哈PIYAN派對 作品集. 版權所有。</p>
+         <p>&copy; 哈哈PIYAN派對 作品集. 版權所有。</p>
         </footer>
     </div>
 

@@ -12,7 +12,12 @@ const app = createApp({
                 phone: '',
                 subject: '',
                 message: ''
-            }
+            },
+            showLightbox: false,
+            lightboxImage: null,
+            lightboxVideo: null,
+            lightboxIndex: 0,
+            allPortfolios: []
         };
     },
     mounted() {
@@ -27,6 +32,12 @@ const app = createApp({
                 this.setupHeroParallax();
             }
         }, 500);
+
+        // 加入鍵盤事件監聽（用於 lightbox 左右、Esc）
+        window.addEventListener('keydown', this.handleKeydown);
+    },
+    unmounted() {
+        window.removeEventListener('keydown', this.handleKeydown);
     },
     watch: {
         currentPage(newPage) {
@@ -168,35 +179,35 @@ const app = createApp({
         initializeSamplePortfolios() {
             const sampleData = [
                 {
-                    title: '待辦事項應用',
-                    description: '一個具有本地存儲功能的待辦事項管理應用。支持添加、編輯、刪除任務，並可根據優先級和截止日期進行排序，界面簡潔易用。',
-                    technologies: ['Vue', 'localStorage', 'CSS3'],
+                    title: '大二遊戲宣傳',
+                    description: '又是無情報肝。',
+                    technologies: ['procreat', 'ae'],
                     link: 'https://example.com/todo',
                     imageUrl: null,
                     videoUrl: '/video/1min.mp4',
                     category: '動畫'
                 },
                 {
-                    title: '天氣應用',
-                    description: '實時天氣查詢應用，集成了 OpenWeatherMap API。可以查詢全球各地的天氣，支持自動定位和天氣預報功能。',
-                    technologies: ['React', 'Axios', 'OpenWeatherMap API'],
+                    title: '自我介紹',
+                    description: '海獅。',
+                    technologies: ['procreat', 'ae'],
                     link: 'https://example.com/weather',
                     imageUrl: null,
                     videoUrl: '/video/1411222018.mp4',
                     category: '動畫'
                 },
                 {
-                    title: '社交媒體儀表板',
-                    description: '社交媒體統計分析儀表板。集成多個社交平台的 API，實時顯示粉絲數、互動率和發文統計，提供數據可視化圖表。',
-                    technologies: ['React', 'Chart.js', 'Instagram API', 'Twitter API'],
-                    link: 'https://example.com/dashboard',
-                    imageUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&h=300&fit=crop',
-                    videoUrl: null,
+                    title: '大二動畫',
+                    description: '老鼠的不歸路。',
+                    technologies: ['procreat', 'ae'],
+                    link: 'https://example.com/weather',
+                    imageUrl: null,
+                    videoUrl: '/video/s1411222018_myanimation.mp4',
                     category: '動畫'
                 },
                 {
-                    title: '個人網站',
-                    description: '使用 Vue 和 Bootstrap 構建的個人作品集網站。這是一個完整的響應式設計，支持暗黑模式和多語言切換，展示了現代前端開發技術。',
+                    title: '大頭插畫',
+                    description: '精緻的大頭插畫創作，展現人物的表情和特點。',
                     technologies: ['Vue 3', 'Bootstrap 5', 'JavaScript'],
                     link: 'https://example.com',
                     imageUrl: '/img/head.jpg',
@@ -204,48 +215,76 @@ const app = createApp({
                     category: '插畫'
                 },
                 {
-                    title: '應用界面設計',
-                    description: '精美的應用界面設計作品，展示了現代UI設計的最佳實踐和創意視覺效果。',
-                    technologies: ['UI Design', 'Figma', 'Sketch'],
+                    title: '全身插畫',
+                    description: '完整的全身人物插畫作品。',
+                    technologies: ['Procreate', 'Digital Painting'],
                     link: 'https://example.com',
                     imageUrl: '/img/hello.jpg',
                     videoUrl: null,
                     category: '插畫'
                 },
                 {
-                    title: '視覺設計作品',
-                    description: '創意十足的視覺設計作品，融合了色彩理論和用戶體驗設計原則。',
-                    technologies: ['Design', 'Adobe XD', 'Illustrator'],
+                    title: '人物立繪',
+                    description: '人物稚態立繪插畫作品。',
+                    technologies: ['Procreate', 'Character Design'],
                     link: 'https://example.com',
                     imageUrl: '/img/oc.jpg',
                     videoUrl: null,
                     category: '插畫'
                 },
                 {
-                    title: '電子商務平台',
-                    description: '功能完整的電子商務平台，包含商品展示、購物車、訂單管理和支付集成。使用了 Stripe 進行安全的支付處理。',
-                    technologies: ['Vue', 'Node.js', 'MongoDB', 'Stripe'],
-                    link: 'https://example.com/shop',
+                    title: '半身插畫',
+                    description: '半身人物插畫作品。',
+                    technologies: ['Procreate', 'Illustration'],
+                    link: 'https://example.com',
                     imageUrl: '/img/hua.jpg',
                     videoUrl: null,
                     category: '插畫'
-                }
+                },
+                {
+                    title: '作業',
+                    description: '半身人物插畫作品。',
+                    technologies: ['Procreate', 'Illustration'],
+                    link: 'https://example.com/shop',
+                    imageUrl: '/img/work.jpg',
+                    videoUrl: null,
+                    category: '插畫'
+                },
             ];
+
+            // 確保示例資料有唯一 _id
+            this.ensurePortfolioIds(sampleData);
 
             // 檢查是否已有作品，如果沒有則添加示例
             if (this.portfolios.length === 0) {
                 setTimeout(() => {
                     this.portfolios = sampleData;
+                    this.updateAllPortfolios();
                     this.$nextTick(() => {
                         this.animateCards();
                     });
                 }, 500);
             }
         },
+        // 產生簡單唯一 id
+        generateId() {
+            return 'id_' + Math.random().toString(36).slice(2, 10) + '_' + Date.now().toString(36);
+        },
+
+        // 確保作品陣列中的每個項目都有 _id
+        ensurePortfolioIds(arr) {
+            if (!Array.isArray(arr)) return;
+            arr.forEach(p => {
+                if (!p._id) p._id = this.generateId();
+            });
+        },
         async loadPortfolios() {
             try {
                 const response = await axios.get('/api/portfolios');
+                // 若後端回傳沒有 _id（例如測試資料），補上唯一 id
+                this.ensurePortfolioIds(response.data);
                 this.portfolios = response.data;
+                this.updateAllPortfolios();
                 this.$nextTick(() => {
                     this.animateCards();
                 });
@@ -317,6 +356,80 @@ const app = createApp({
         },
         formatDate(date) {
             return new Date(date).toLocaleString('zh-TW');
+        },
+        updateAllPortfolios() {
+            // 合併所有作品用於光箱導航
+            // 保留原本的順序
+            this.ensurePortfolioIds(this.portfolios);
+            this.allPortfolios = this.portfolios.slice();
+        },
+        openLightbox(portfolio) {
+            // 當在作品集頁面時，僅以同分類的作品作為光箱導航來源，順序與頁面相同
+            let source = this.portfolios;
+            if (this.currentPage === 'portfolio' && portfolio && portfolio.category) {
+                source = this.portfolios.filter(p => p.category === portfolio.category);
+            }
+
+            // 確保 id
+            this.ensurePortfolioIds(source);
+            this.allPortfolios = source.slice();
+
+            // 找到當前索引
+            this.lightboxIndex = this.allPortfolios.findIndex(p => p._id === portfolio._id);
+            if (this.lightboxIndex === -1) {
+                // fallback: 比對 title/link
+                this.lightboxIndex = this.allPortfolios.findIndex(p => p === portfolio || (p.title === portfolio.title && p.link === portfolio.link));
+            }
+            if (this.lightboxIndex < 0) this.lightboxIndex = 0;
+
+            const current = this.allPortfolios[this.lightboxIndex];
+            this.lightboxImage = current.imageUrl;
+            this.lightboxVideo = current.videoUrl;
+            this.showLightbox = true;
+            document.body.style.overflow = 'hidden';
+        },
+        closeLightbox() {
+            this.showLightbox = false;
+            document.body.style.overflow = 'auto';
+            // 若有影片，停止播放
+            const v = document.querySelector('.lightbox-video');
+            if (v) {
+                try { v.pause(); v.currentTime = 0; } catch (e) { /* ignore */ }
+            }
+        },
+        nextLightbox() {
+            if (!this.allPortfolios.length) return;
+            this.lightboxIndex = (this.lightboxIndex + 1) % this.allPortfolios.length;
+            const portfolio = this.allPortfolios[this.lightboxIndex];
+            this.lightboxImage = portfolio.imageUrl;
+            this.lightboxVideo = portfolio.videoUrl;
+            // 如果是影片，讓它從頭播放
+            this.$nextTick(() => {
+                const v = document.querySelector('.lightbox-video');
+                if (v) { try { v.currentTime = 0; v.play(); } catch(e){} }
+            });
+        },
+        prevLightbox() {
+            if (!this.allPortfolios.length) return;
+            this.lightboxIndex = (this.lightboxIndex - 1 + this.allPortfolios.length) % this.allPortfolios.length;
+            const portfolio = this.allPortfolios[this.lightboxIndex];
+            this.lightboxImage = portfolio.imageUrl;
+            this.lightboxVideo = portfolio.videoUrl;
+            this.$nextTick(() => {
+                const v = document.querySelector('.lightbox-video');
+                if (v) { try { v.currentTime = 0; v.play(); } catch(e){} }
+            });
+        },
+        // 鍵盤操作：左右切換、Esc 關閉
+        handleKeydown(e) {
+            if (!this.showLightbox) return;
+            if (e.key === 'Escape') {
+                this.closeLightbox();
+            } else if (e.key === 'ArrowRight') {
+                this.nextLightbox();
+            } else if (e.key === 'ArrowLeft') {
+                this.prevLightbox();
+            }
         }
     }
 });

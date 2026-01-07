@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>收到的訊息</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container py-5">
+    <h2 class="mb-4">收到的訊息</h2>
+    <% if (messages.length === 0) { %>
+      <div class="alert alert-info">還沒有收到訊息。</div>
+    <% } %>
+    <% messages.forEach(function(msg) { %>
+      <div class="card mb-3">
+        <div class="card-header">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <strong><%= msg.name %></strong>
+              <br>
+              <small class="text-muted">
+                📧 <%= msg.email %>
+                <% if (msg.phone) { %> | 📞 <%= msg.phone %> <% } %>
+              </small>
+              <% if (!msg.read) { %>
+                <span class="badge bg-warning ms-2">未讀</span>
+              <% } %>
+            </div>
+            <small class="text-muted"><%= new Date(msg.createdAt).toLocaleString('zh-TW') %></small>
+          </div>
+        </div>
+        <div class="card-body">
+          <h5 class="card-title"><%= msg.subject %></h5>
+          <p class="card-text"><%= msg.message %></p>
+          <div class="btn-group" role="group">
+            <% if (!msg.read) { %>
+              <form method="post" action="/messages/<%= msg._id %>/read" style="display:inline;">
+                <button type="submit" class="btn btn-sm btn-warning">標記為已讀</button>
+              </form>
+            <% } %>
+            <form method="post" action="/messages/<%= msg._id %>/delete" style="display:inline;">
+              <button type="submit" class="btn btn-sm btn-danger">刪除</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    <% }); %>
+  </div>
+</body>
+</html>
