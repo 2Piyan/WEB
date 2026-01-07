@@ -3,6 +3,7 @@ const { createApp } = Vue;
 const app = createApp({
     data() {
         return {
+            isLoading: true, // 新增載入狀態
             currentPage: 'home',
             portfolios: [],
             contactForm: {
@@ -201,6 +202,15 @@ $.ajax({
         vm.portfolios = results;
         vm.$nextTick(() => {
             vm.animateCards();
+            // 延遲關閉載入畫面，讓圖片和影片有時間載入
+            setTimeout(() => {
+                vm.isLoading = false;
+            }, 1000);
         });
+    },
+    error: function(err) {
+        console.error('載入作品集出錯:', err);
+        // 發生錯誤也要關閉載入畫面，避免卡死
+        vm.isLoading = false;
     }
 });

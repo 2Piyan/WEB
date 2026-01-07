@@ -16,9 +16,8 @@ var portfolioDB = Database.create(__dirname + "/portfolios.db");
 server.use(cors());
 server.use(express.json());
 
-
-
-server.use(express.static(__dirname + '/Public'));
+// 設定靜態檔案資料夾 (務必確保資料夾名稱大小寫與此處一致，Render/Linux 是區分大小寫的)
+server.use(express.static(path.join(__dirname, 'Public')));
 server.use(fileupload({extended: true}));
 
 // 設置EJS模板引擎

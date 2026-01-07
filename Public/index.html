@@ -9,6 +9,12 @@
 </head>
 <body>
     <div id="app">
+        <!-- 載入畫面 -->
+        <div id="loading-overlay" v-if="isLoading">
+            <div class="spinner"></div>
+            <div class="loading-text">Loading...</div>
+        </div>
+
         <!-- 導航欄 -->
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
             <div class="container-fluid">
